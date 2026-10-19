@@ -1,0 +1,102 @@
+# Question templates by rule_id.
+# Each template has a question format string and suggested answer options.
+# Template variables are enclosed in ${...} and filled from finding.details.
+
+templates:
+  REF_BROKEN:
+    question: "Section ${sectionLabel} references ${details.rawText} but it does not exist in the contract. Is there a missing section or is the reference number incorrect?"
+    options:
+      - "The reference number is incorrect — it should be ${suggestedFix}"
+      - "A section is missing and should be added"
+      - "The reference should be removed"
+      - "Other"
+
+  TERM_UNDEFINED:
+    question: "The term \"${details.term}\" is used ${details.occurrences} time(s) but is not formally defined. Should a definition be added?"
+    options:
+      - "Yes, add a definition"
+      - "The term is commonly understood and does not need a definition"
+      - "The term should be replaced with a different term"
+      - "Other"
+
+  TERM_UNUSED:
+    question: "The term \"${details.term}\" is defined in ${sectionLabel} but never used in the contract. Should it be removed?"
+    options:
+      - "Remove the definition"
+      - "Keep the definition (it will be used in a future amendment)"
+      - "Other"
+
+  TERM_DUPLICATE:
+    question: "The term \"${details.term}\" is defined more than once with different text. Which definition is correct?"
+    options:
+      - "The definition in ${details.firstClause} is correct"
+      - "The definition in ${details.secondClause} is correct"
+      - "Both need to be reconciled"
+      - "Other"
+
+  DATE_LOGIC:
+    question: "The date in ${details.endClause} (${details.end}) comes before the date in ${details.startClause} (${details.start}). Which date is correct?"
+    options:
+      - "The date in ${details.startClause} is correct"
+      - "The date in ${details.endClause} is correct"
+      - "Both dates need to be corrected"
+      - "Other"
+
+  WORDS_VS_DIGITS:
+    question: "In ${sectionLabel}, the number in words (\"${details.words}\") does not match the number in digits (\"${details.digits}\"). Which is correct?"
+    options:
+      - "The number in words is correct: ${details.wordsValue}"
+      - "The number in digits is correct: ${details.digitsValue}"
+      - "Both are incorrect"
+      - "Other"
+
+  VALUE_CONFLICT:
+    question: "The ${details.subject} has conflicting values: ${details.values}. Which value is correct?"
+    options:
+      - "The value in ${details.firstClause} is correct"
+      - "The value in ${details.secondClause} is correct"
+      - "Both are incorrect"
+      - "Other"
+
+  PERCENT_SUM:
+    question: "The percentage allocations in the ${details.group} group sum to ${details.actualSum}% instead of ${details.expectedTotal}%. Is this intentional?"
+    options:
+      - "The percentages need to be corrected to sum to ${details.expectedTotal}%"
+      - "The current sum is intentional"
+      - "Other"
+
+  NUMBERING_GAP:
+    question: "There is a gap in section numbering: ${details.before} is followed by ${details.after}. Is a section missing?"
+    options:
+      - "Yes, a section is missing"
+      - "The numbering is intentional"
+      - "Other"
+
+  NUMBERING_DUPLICATE:
+    question: "The section label ${details.label} appears more than once. Which occurrence is correct?"
+    options:
+      - "The first occurrence should be renumbered"
+      - "The second occurrence should be renumbered"
+      - "Other"
+
+  PLACEHOLDER_LEFT:
+    question: "Section ${sectionLabel} contains placeholder text: \"${evidence}\". Should this be replaced?"
+    options:
+      - "Yes, replace with the correct value"
+      - "This placeholder is intentional (to be filled later)"
+      - "Other"
+
+  PARSE_COVERAGE_LOW:
+    question: "The parser could not recognize ${details.unparsedLines} lines (${details.coveragePercent}% coverage). Please review the raw text for formatting issues."
+    options:
+      - "The document formatting will be corrected"
+      - "Proceed with partial analysis results"
+      - "Other"
+
+  # Default template for rules without a specific template
+  _default:
+    question: "An issue was detected in ${sectionLabel}: ${message}"
+    options:
+      - "This is a genuine issue and should be corrected"
+      - "This is not an issue (false positive)"
+      - "Other"

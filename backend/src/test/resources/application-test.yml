@@ -1,0 +1,62 @@
+# Test profile: overrides for unit tests that don't use Testcontainers
+spring:
+  datasource:
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:contractdb_test}
+    username: ${DB_USER:test}
+    password: ${DB_PASS:test}
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+
+app:
+  security:
+    jwt:
+      secret: test_jwt_secret_that_is_at_least_64_characters_long_for_hmac_sha256_signing
+      expiration-ms: 86400000
+    cors:
+      allowed-origins:
+        - http://localhost:5173
+    bcrypt-strength: 4
+
+  upload:
+    storage-dir: ./target/test-uploads
+    max-file-size-mb: 10
+    allowed-extensions:
+      - docx
+      - pdf
+    allowed-mime-types:
+      - application/vnd.openxmlformats-officedocument.wordprocessingml.document
+      - application/pdf
+
+  analysis:
+    max-pages: 100
+    max-paragraphs: 5000
+    parse-coverage-threshold: 70
+
+  counsel:
+    token-ttl-days: 7
+    rate-limit-per-minute: 100
+    send-rate-limit-per-hour: 50
+
+  notification:
+    sendgrid-api-key: ""
+    from-email: test@test.com
+    from-name: Test
+
+  benchmark:
+    min-recall: 0.90
+    min-precision: 0.85
+
+  login:
+    max-failures: 5
+    lockout-minutes: 15
+
+logging:
+  level:
+    com.contractcompiler: DEBUG

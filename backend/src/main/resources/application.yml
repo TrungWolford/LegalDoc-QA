@@ -1,0 +1,121 @@
+spring:
+  application:
+    name: contract-compiler
+
+  datasource:
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:contractdb}
+    username: ${DB_USER:contractuser}
+    password: ${DB_PASS:contractpass}
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 2
+
+  jpa:
+    open-in-view: false
+    hibernate:
+      # Flyway owns schema migrations; Hibernate must NOT re-validate or alter the schema.
+      # ddl-auto: validate would fail because PostgreSQL exposes CHAR columns as "bpchar"
+      # (blank-padded char) which Hibernate does not recognise as equivalent to "char".
+      ddl-auto: none
+    properties:
+      hibernate:
+        jdbc:
+          batch_size: 50
+        order_inserts: true
+        order_updates: true
+        format_sql: false
+
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    baseline-on-migrate: false
+
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+      password: ${REDIS_PASS:}
+
+  servlet:
+    multipart:
+      max-file-size: ${UPLOAD_MAX_SIZE:50MB}
+      max-request-size: ${UPLOAD_MAX_SIZE:50MB}
+
+  jackson:
+    default-property-inclusion: non_null
+    serialization:
+      write-dates-as-timestamps: false
+
+server:
+  port: ${SERVER_PORT:8080}
+  error:
+    include-stacktrace: never
+    include-message: never
+
+# Application-specific configuration
+app:
+  security:
+    jwt:
+      secret: ${JWT_SECRET:}
+      expiration-ms: ${JWT_EXPIRATION_MS:86400000}
+    cors:
+      allowed-origins: ${CORS_ORIGINS:http://localhost:5173,http://localhost:3000}
+    bcrypt-strength: 12
+
+  upload:
+    storage-dir: ${UPLOAD_DIR:./uploads}
+    max-file-size-mb: ${UPLOAD_MAX_SIZE_MB:50}
+    allowed-extensions:
+      - docx
+      - pdf
+    allowed-mime-types:
+      - application/vnd.openxmlformats-officedocument.wordprocessingml.document
+      - application/pdf
+
+  analysis:
+    max-pages: ${MAX_PAGES:500}
+    max-paragraphs: ${MAX_PARAGRAPHS:10000}
+    parse-coverage-threshold: ${PARSE_COVERAGE_THRESHOLD:70}
+
+  counsel:
+    token-ttl-days: ${COUNSEL_TOKEN_TTL_DAYS:7}
+    rate-limit-per-minute: ${COUNSEL_RATE_LIMIT:20}
+    send-rate-limit-per-hour: ${COUNSEL_SEND_RATE_LIMIT:5}
+
+  notification:
+    sendgrid-api-key: ${SENDGRID_API_KEY:}
+    from-email: ${FROM_EMAIL:noreply@contractcompiler.com}
+    from-name: ${FROM_NAME:Contract Compiler}
+
+  benchmark:
+    min-recall: ${BENCHMARK_MIN_RECALL:0.90}
+    min-precision: ${BENCHMARK_MIN_PRECISION:0.85}
+
+  login:
+    max-failures: ${LOGIN_MAX_FAILURES:5}
+    lockout-minutes: ${LOGIN_LOCKOUT_MINUTES:15}
+
+# Actuator
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: when-authorized
+
+# OpenAPI
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    operations-sorter: method
+
+logging:
+  level:
+    com.contractcompiler: ${LOG_LEVEL:INFO}
+    org.flywaydb: INFO
+  pattern:
+    console: "%d{ISO8601} [%thread] [%X{traceId:-}] %-5level %logger{36} - %msg%n"

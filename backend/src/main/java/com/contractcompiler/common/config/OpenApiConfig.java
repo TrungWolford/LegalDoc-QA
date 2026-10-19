@@ -1,0 +1,33 @@
+package com.contractcompiler.common.config;
+
+import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.info.Info;
+import io.swagger.v3.oas.models.security.SecurityRequirement;
+import io.swagger.v3.oas.models.security.SecurityScheme;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+/**
+ * OpenAPI / Swagger configuration for API documentation.
+ */
+@Configuration
+public class OpenApiConfig {
+
+    private static final String BEARER_SCHEME = "bearerAuth";
+
+    @Bean
+    public OpenAPI contractCompilerOpenApi() {
+        return new OpenAPI()
+                .info(new Info()
+                        .title("Contract Compiler API")
+                        .description("Legal document QA system — parse, lint, and counsel workflow")
+                        .version("1.0.0"))
+                .addSecurityItem(new SecurityRequirement().addList(BEARER_SCHEME))
+                .schemaRequirement(BEARER_SCHEME,
+                        new SecurityScheme()
+                                .name(BEARER_SCHEME)
+                                .type(SecurityScheme.Type.HTTP)
+                                .scheme("bearer")
+                                .bearerFormat("JWT"));
+    }
+}

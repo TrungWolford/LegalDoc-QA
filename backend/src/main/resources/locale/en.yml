@@ -1,0 +1,62 @@
+# English locale pack for number words, ordinals, month names, and currency symbols.
+# Used by the analysis pipeline for number-word parsing and normalization.
+
+locale: en
+
+months:
+  - January
+  - February
+  - March
+  - April
+  - May
+  - June
+  - July
+  - August
+  - September
+  - October
+  - November
+  - December
+
+month_abbreviations:
+  Jan: January
+  Feb: February
+  Mar: March
+  Apr: April
+  Jun: June
+  Jul: July
+  Aug: August
+  Sep: September
+  Sept: September
+  Oct: October
+  Nov: November
+  Dec: December
+
+ordinals:
+  first: 1
+  second: 2
+  third: 3
+  fourth: 4
+  fifth: 5
+  sixth: 6
+  seventh: 7
+  eighth: 8
+  ninth: 9
+  tenth: 10
+
+currency_symbols:
+  "$": USD
+  "£": GBP
+  "€": EUR
+  "¥": JPY
+
+currency_codes:
+  - USD
+  - GBP
+  - EUR
+  - JPY
+  - CHF
+  - CAD
+  - AUD
+  - SGD
+  - HKD
+  - VND
